@@ -1,0 +1,63 @@
+import mongoose from "mongoose";
+
+// const UserSchema = new mongoose.Schema({
+//   username: { type: String, required: true, unique: true },
+//   email: { type: String, required: true, unique: true },
+//   password: { type: String, required: true },
+//   role: { type: String, enum: ["admin", "moderator", "user"], default: "user" },
+// }, { timestamps: true });
+
+// export default mongoose.models.User || mongoose.model("User", UserSchema);
+
+
+const UserSchema = new mongoose.Schema(
+    
+{
+    // Authentication & Role Management
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, enum: ["admin", "moderator", "user"], default: "user" },
+    status: { type: String, enum: ["active", "inactive", "banned"], default: "active" },
+
+    // Backend & System Fields
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+
+    // Personal Information
+    fullName: { type: String },
+    gender: { type: String, enum: ["male", "female", "other"] },
+    age: { type: Number },
+    phone: { type: String },
+
+    // Location
+    country: { type: String },
+    city: { type: String },
+    state: { type: String },
+
+    // Additional Details
+    religion: { type: String },
+    education: { type: String },
+    profession: { type: String },
+
+    // Profile Information
+    profilePicture: { type: String, default: "/default-profile.png" },
+    aboutMe: { type: String, maxlength: 500 },
+
+    // Interests & Hobbies
+    travelInterest: { type: [String], default: [] },
+    hobbies: { type: [String], default: [] },
+    interests: { type: [String], default: [] },
+
+    // Video Introduction
+    videoIntroduction: { type: String }, // URL to a video
+
+    // Matching & Relationships (Optional)
+    matches: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
+  },
+  { timestamps: true } // Adds `createdAt` & `updatedAt` fields automatically
+);
+
+export default mongoose.models.User || mongoose.model("User", UserSchema);
+
+
