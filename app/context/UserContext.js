@@ -1,32 +1,36 @@
-"use client";
-import { createContext, useContext, useState, useEffect } from "react";
+"use client"; // Mark this as a Client Component
+
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const UserContext = createContext();
 
-export function UserProvider({ children }) {
+export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetch("/api/auth/update-profile", { method: "GET" });
-      const data = await res.json();
-      if (res.ok) {
-        setUser(data.user);
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const data = await res.json();
+          console.log("Fetched User Data:", data.user); 
+          setUser(data.user);
+        }
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-
     fetchUser();
   }, []);
 
+
   return (
-    <UserContext.Provider value={{ user, setUser, loading }}>
-      {children}
+    <UserContext.Provider value={{ user, loading }}>{children}
     </UserContext.Provider>
   );
-}
+};
 
-export function useUser() {
-  return useContext(UserContext);
-}
+export const useUser = () => useContext(UserContext);

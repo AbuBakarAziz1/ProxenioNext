@@ -25,7 +25,7 @@ export default function Register() {
     const data = await res.json();
     if (res.ok) {
       setSuccess("User registered successfully! Redirecting...");
-      setTimeout(() => router.push("/login"), 2000);
+      
     } else {
       setError(data.error);
     }

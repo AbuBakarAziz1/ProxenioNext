@@ -14128,7 +14128,7 @@ body {
 }
 
 .thead-bg>tr>th {
-    padding: 15px 5px;
+    padding: 15px 15px;
     background: #F6F6F6 !important;
     color:#3F3F44 !important;
     font-size: 16px !important;
@@ -14136,6 +14136,7 @@ body {
     vertical-align: middle;
 }
 .tbody-bg>tr>td { 
+    padding: 10px 15px;;
     color:#8B8B8B ;
     font-size: 16px !important;
     font-weight: 500 !important;
@@ -14195,3 +14196,20 @@ body {
     padding: 6rem !important;
   }
 
+
+
+.profile-card {
+            position: relative;
+        }
+
+        .bottom-left {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+        }
+
+        .bottom-right {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+        }

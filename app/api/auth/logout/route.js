@@ -1,10 +1,20 @@
-import { NextResponse } from "next/server";
 
-export async function GET() {
-  const response = NextResponse.json({ message: "Logged out successfully" });
+import { cookies } from "next/headers";
+export async function POST() {
+  try {
+    const cookieStore = await cookies();
 
-  // Remove token by setting it as an expired cookie
-  response.headers.set("Set-Cookie", "token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly");
+    // ✅ Remove the auth token by setting it to an empty value & expiring it
+    cookieStore.set("authToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      expires: new Date(0), // ✅ Expire the cookie immediately
+    });
 
-  return response;
+    return Response.json({ message: "Logged out successfully" }, { status: 200 });
+  } catch (error) {
+    return Response.json({ error: "Error logging out" }, { status: 500 });
+  }
 }

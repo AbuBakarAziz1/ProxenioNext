@@ -9,7 +9,6 @@ import mongoose from "mongoose";
 
 // export default mongoose.models.User || mongoose.model("User", UserSchema);
 
-
 const UserSchema = new mongoose.Schema(
     
 {
@@ -46,14 +45,15 @@ const UserSchema = new mongoose.Schema(
 
     // Interests & Hobbies
     travelInterest: { type: [String], default: [] },
-    hobbies: { type: [String], default: [] },
-    interests: { type: [String], default: [] },
+    hobbiesInterest: { type: [String], default: [] },
 
     // Video Introduction
     videoIntroduction: { type: String }, // URL to a video
 
-    // Matching & Relationships (Optional)
-    matches: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
+    heartsSent: [{ type: mongoose.Schema.Types.ObjectId, ref: "Match" }],
+    heartsReceived: [{ type: mongoose.Schema.Types.ObjectId, ref: "Match" }],
+    matches: [{ type: mongoose.Schema.Types.ObjectId, ref: "Match" }]
+
   },
   { timestamps: true } // Adds `createdAt` & `updatedAt` fields automatically
 );
