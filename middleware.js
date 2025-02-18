@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 export async function middleware(req) {
-  const token = req.cookies.get("token")?.value; // Get JWT token from cookies
+  const token = req.cookies.get("authToken")?.value; // Get JWT token from cookies
   const url = req.nextUrl.pathname;
 
   if (!token) {

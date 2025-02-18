@@ -1,8 +1,13 @@
+"use client"
+
 import TabSection from "@/components/TabSection";
+import { useUser } from "@/app/context/UserContext";
+
 
 export default function Matches() {
+  const { currentUser } = useUser();
 
-  const userId = "67b2139e66a17f0c7869a85b";
+  const userId = currentUser.id;
   return (
     <div>
       <TabSection userId={userId} />

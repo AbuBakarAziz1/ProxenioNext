@@ -3,7 +3,7 @@ import User from "@/models/User";
 import { connectDB } from "@/lib/mongodb";
 
 export async function verifyToken(req) {
-  const token = req.cookies.get("token")?.value;
+  const token = req.cookies.get("authToken")?.value;
   if (!token) return null;
 
   try {

@@ -7,11 +7,9 @@ export async function GET(req) {
   try {
     await connectDB();
 
-    // Get session (optional: if using authentication)
-    // const session = await getServerSession(req);
-    // if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("id");
 
-    const userId = "67b2139e66a17f0c7869a85b"; // Replace with session user ID
     const user = await User.findById(userId).select("-password");
 
     if (!user) {

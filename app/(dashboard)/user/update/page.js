@@ -1,5 +1,6 @@
 "use client"
 
+import { useUser } from "@/app/context/UserContext";
 import { useState } from "react";
 
 export default function ProfileForm({ user }) {
@@ -19,6 +20,8 @@ export default function ProfileForm({ user }) {
     profilePicture: user?.profilePicture || "",
     videoIntroduction: user?.videoIntroduction || "",
   });
+  const { currentUser } = useUser();
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,7 +34,7 @@ export default function ProfileForm({ user }) {
     const response = await fetch("/api/update-profile", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: "67b2139e66a17f0c7869a85b", ...formData }),
+      body: JSON.stringify({ userId: currentUser.id, ...formData }),
     });
 
     const data = await response.json();

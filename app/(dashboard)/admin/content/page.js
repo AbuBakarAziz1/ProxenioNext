@@ -1,11 +1,35 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
+import { useUser } from "@/app/context/UserContext";
 
 export default function Content() {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null); // State for video preview URL
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState(null); // State for the uploaded video URL
+
+  const { currentUser } = useUser();
+
+  // Fetch uploaded video when the component mounts or user changes
+  useEffect(() => {
+    if (currentUser?.id) {
+      fetchUploadedVideo();
+    }
+  }, [currentUser]);
+
+  // Fetch the video for the logged-in user
+  const fetchUploadedVideo = async () => {
+    try {
+      const response = await fetch(`/api/get-uploaded-video?userId=${currentUser.id}`);
+      const data = await response.json();
+      if (data.videoUrl) {
+        setUploadedVideoUrl(data.videoUrl); // Set the video URL if it exists
+      }
+    } catch (error) {
+      console.error("Error fetching uploaded video:", error);
+    }
+  };
 
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -28,6 +52,7 @@ export default function Content() {
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("userId", currentUser.id);
 
     setUploading(true);
 
@@ -38,6 +63,9 @@ export default function Content() {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        setUploadedVideoUrl(data.videoUrl); // Set the video URL from the response
+
         alert("Upload successful!");
 
         // Reset the state after successful upload
@@ -57,16 +85,25 @@ export default function Content() {
   return (
     <div className="row">
       <div className="col-md-12">
-        {/* Dropzone for file selection (hidden when previewUrl exists) */}
-        {!previewUrl && (
-          <div
-            {...getRootProps()}
-            className="dropzone card d-flex justify-content-center align-items-center bg-lightgray"
-            style={{ height: "400px", border: "2px dashed lightgray", cursor: "pointer" }}
-          >
-            <input {...getInputProps()} />
-            <p>Drag & drop a video here, or click to select a video</p>
+        {/* Show the uploaded video if available */}
+        {uploadedVideoUrl ? (
+          <div className="mt-3">
+            <video controls width="100%" height={400} src={uploadedVideoUrl}>
+              Your browser does not support the video tag.
+            </video>
           </div>
+        ) : (
+          // Dropzone for file selection (hidden when previewUrl exists)
+          !previewUrl && (
+            <div
+              {...getRootProps()}
+              className="dropzone card d-flex justify-content-center align-items-center bg-lightgray"
+              style={{ height: "400px", border: "2px dashed lightgray", cursor: "pointer" }}
+            >
+              <input {...getInputProps()} />
+              <p>Drag & drop a video here, or click to select a video</p>
+            </div>
+          )
         )}
 
         {/* Video Preview (shown when previewUrl exists) */}

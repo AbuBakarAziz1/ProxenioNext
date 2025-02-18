@@ -9,12 +9,11 @@ export async function POST(request) {
 
   const formData = await request.formData();
   const file = formData.get("file");
+  const userId = formData.get("userId");
 
   if (!file) {
     return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
   }
-
-  const userId = "67b2139e66a17f0c7869a85b"; // Hardcoded user ID (replace with dynamic if needed)
   
   const buffer = Buffer.from(await file.arrayBuffer());
   //const filename = `${Date.now()}-${file.name}`;

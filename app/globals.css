@@ -13996,6 +13996,12 @@ body {
     color: #DA4557;
 }
 
+.sidebar-menu a.active {
+    background: linear-gradient(90deg, #FBCA9D -8.95%, #FBC6D0 100%) !important;
+    border-radius: 10px;
+    color: #DA4557;
+}
+
 .content {
     background: #FFFFFF !important;
     margin-left: 250px;
@@ -14188,15 +14194,12 @@ body {
 .fs-30 {
     font-size: 30px !important;
 }
-
 .p-6 {
     padding: 4.5rem !important;
-  }
+}
   .p-7 {
     padding: 6rem !important;
   }
-
-
 
 .profile-card {
             position: relative;

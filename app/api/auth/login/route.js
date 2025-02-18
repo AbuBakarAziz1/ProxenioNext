@@ -2,7 +2,7 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
+
 
 export async function POST(req) {
   try {
@@ -10,27 +10,58 @@ export async function POST(req) {
     const { email, password } = await req.json();
 
     const user = await User.findOne({ email });
-    if (!user) return Response.json({ error: "Invalid credentials" }, { status: 401 });
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Invalid credentials" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return Response.json({ error: "Invalid credentials" }, { status: 401 });
+    if (!isMatch) {
+      return new Response(JSON.stringify({ error: "Invalid credentials" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
 
-    const token = jwt.sign({ id: user._id, role: user.role, email: user.email, name: user.username, profilePicture: user.profilePicture }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET is not set in environment variables");
+    }
 
-    const cookieStore = await cookies();
-    cookieStore.set("authToken", token, {
-      httpOnly: true, 
-      secure: process.env.NODE_ENV === "production", // Secure only in production
-      sameSite: "lax",  //  "Lax" mode allows local dev without HTTPS
-      path: "/",
-      maxAge: 3600, // 1 hour
-    });
+    const token = jwt.sign(
+      { id: user._id, role: user.role, email: user.email, username: user.username, profilePicture: user.profilePicture },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
 
-    return Response.json(
-      { user: { id: user._id, name: user.username, email: user.email, role: user.role, profilePicture: user.profilePicture }, token },
-      { status: 200 }
+    // const cookieStore = cookies();
+    // cookieStore.set("authToken", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   sameSite: "lax",
+    //   path: "/",
+    //   maxAge: 3600,
+    // });
+
+    return new Response(
+      JSON.stringify({
+        user: {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          profilePicture: user.profilePicture
+        },
+        token
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
-    return Response.json({ error: "Error logging in" }, { status: 500 });
+    console.error("Login error:", error);
+    return new Response(JSON.stringify({ error: "Error logging in" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 }

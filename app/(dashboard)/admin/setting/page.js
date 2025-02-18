@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { BsPencil, BsFillTrash3Fill } from "react-icons/bs";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState([]);
@@ -142,93 +142,75 @@ export default function SettingsPage() {
         </Modal.Footer>
       </Modal>
 
-      {/* Add Modal */}
-      {addNew && (
-        <div className="modal fade show d-block" id="addModal" tabIndex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header bg-white border-0">
-                <h1 className="modal-title fs-5">Add New</h1>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" onClick={() => setAddNew(null)} aria-label="Close"></button>
-              </div>
-              <div className="modal-body">
-                <form>
-                  <div className="mb-3">
-                    <label className="form-label">Transaction Type</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter here"
-                      value={newSetting.transactionType}
-                      onChange={(e) => setNewSetting({ ...newSetting, transactionType: e.target.value })}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Amount</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Enter here"
-                      value={newSetting.amount}
-                      onChange={(e) => setNewSetting({ ...newSetting, amount: e.target.value })}
-                    />
-                  </div>
-                  <div className="d-grid pt-3">
-                    <button type="button" className="btn btn-danger" onClick={handleCreate}>
-                      Save
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal show={addNew} onHide={() => setAddNew(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Add New</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Transaction Type</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter here"
+                value={newSetting.transactionType}
+                onChange={(e) =>
+                  setNewSetting({ ...newSetting, transactionType: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Amount</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter here"
+                value={newSetting.amount}
+                onChange={(e) => setNewSetting({ ...newSetting, amount: e.target.value })}
+              />
+            </Form.Group>
+            <Button variant="danger" className="w-100" onClick={handleCreate}>
+              Save
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
 
       {/* Edit Modal */}
-      {editing && (
-        <div className="modal fade show d-block" id="editModal" tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header bg-white border-0">
-                <h1 className="modal-title fs-5">Edit Transaction</h1>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setEditing(null)}></button>
-              </div>
-              <div className="modal-body">
-                <form>
-                  <div className="mb-3">
-                    <label className="form-label">Transaction Type</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter here"
-                      value={updatedSetting.transactionType}
-                      onChange={(e) =>
-                        setUpdatedSetting({ ...updatedSetting, transactionType: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Amount</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="Enter here"
-                      value={updatedSetting.amount}
-                      onChange={(e) => setUpdatedSetting({ ...updatedSetting, amount: e.target.value })}
-                    />
-                  </div>
-                  <div className="d-grid pt-3">
-                    <button type="button" className="btn btn-danger" onClick={() => handleUpdate(editing)}>
-                      Save Changes
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal show={editing} onHide={() => setEditing(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Transaction</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Transaction Type</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter here"
+                value={updatedSetting.transactionType}
+                onChange={(e) =>
+                  setUpdatedSetting({ ...updatedSetting, transactionType: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Amount</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter here"
+                value={updatedSetting.amount}
+                onChange={(e) =>
+                  setUpdatedSetting({ ...updatedSetting, amount: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Button variant="danger" className="w-100" onClick={() => handleUpdate(editing)}>
+              Save Changes
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
     </>
   );
 }

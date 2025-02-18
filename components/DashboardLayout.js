@@ -5,15 +5,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useUser } from "@/app/context/UserContext";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
 export default function DashboardLayout({ children }) {
 
   const router = useRouter(); // Initialize router
   const pathname = usePathname();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const { user, loading } = useUser();
+  const { currentUser, loading } = useUser();
   if (loading) return <p>Loading...</p>;
 
 
@@ -32,13 +33,24 @@ export default function DashboardLayout({ children }) {
     }
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev); // Toggle the sidebar state
+  };
+
   // Extract page name from the path
   const currentPage = pathname.split("/").pop() || "Dashboard";
 
   return (
     <>
+    <button className="toggle-btn" id="toggleSidebar" onClick={toggleSidebar}>
+        <i className="bi bi-list"></i> {/* Hamburger icon */}
+      </button>
+
       {/* Sidebar */}
-      <div className={`sidebar border-end ${isSidebarOpen ? "open" : "closed"}`} id="sidebar">
+      <div
+        className={`sidebar border-end ${isSidebarOpen ? "show" : ""}`}
+        id="sidebar"
+      >
         <div className="d-flex justify-content-start align-items-center mb-4">
           <Image src="/assets/img/LogoProxenio.png" width={45} height={45} alt="Logo" />
           {isSidebarOpen && (
@@ -79,15 +91,19 @@ export default function DashboardLayout({ children }) {
             <div className="col-md-6 d-none d-md-flex justify-content-end align-items-center">
 
               <Image
-                src={user?.profilePicture || "/assets/img/user.png"}
+                src={currentUser?.profilePicture || "/assets/img/user.png"}
                 width={60}
                 height={60}
                 className="rounded-pill border me-3 img-fluid"
                 alt="user"
               />
               <div className="text-start me-5">
-                <h5 className="mb-0 text-muted">{user?.name || "Guest"}</h5>
-                <p className="mb-0 text-muted">{user?.email || "No Email"}</p>
+              <h5 className="mb-0 text-muted">
+                                    {loading ? "Loading..." : currentUser?.username || "Guest"}
+                                </h5>
+                                <p className="mb-0 text-muted">
+                                    {loading ? "Loading..." : currentUser?.email || "No Email"}
+                                </p>
               </div>
 
               <ul className="navbar-nav bg-light ms-5">

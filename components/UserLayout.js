@@ -5,15 +5,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useUser } from "@/app/context/UserContext";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 export default function UserLayout({ children }) {
     const router = useRouter();
     const pathname = usePathname();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    const { user, loading } = useUser();
-
-
-    if (loading) return <p>Loading...</p>;
+    const { currentUser, loading } = useUser();
 
     const handleLogout = async () => {
         try {
@@ -30,12 +28,22 @@ export default function UserLayout({ children }) {
         }
     };
 
+    const toggleSidebar = () => {
+        setIsSidebarOpen((prev) => !prev); // Toggle the sidebar state
+      };
+    
+
     const currentPage = pathname.split("/").pop() || "Dashboard";
+    if (loading) return <p>Loading...</p>;
 
     return (
         <>
+        <button className="toggle-btn" id="toggleSidebar" onClick={toggleSidebar}>
+        <i className="bi bi-list"></i> {/* Hamburger icon */}
+      </button>
+
             {/* Sidebar */}
-            <div className={`sidebar border-end ${isSidebarOpen ? "open" : "closed"}`} id="sidebar">
+            <div className={`sidebar border-end ${isSidebarOpen ? "show" : ""}`} id="sidebar">
                 <div className="d-flex justify-content-start align-items-center mb-4">
                     <Image src="/assets/img/LogoProxenio.png" width={45} height={45} alt="Logo" />
                     {isSidebarOpen && (
@@ -69,15 +77,26 @@ export default function UserLayout({ children }) {
                         </div>
                         <div className="col-md-6 d-none d-md-flex justify-content-end align-items-center">
                             <Image
-                                src={user?.profilePicture || "/assets/img/user.png"}
+                                src={
+                                    loading
+                                        ? "/assets/img/loading.gif" // Use a loading indicator if necessary
+                                        : currentUser?.profilePicture
+                                            ? currentUser.profilePicture
+                                            : "/assets/img/user.png"
+                                }
                                 width={50}
                                 height={50}
                                 className="rounded-pill border me-3 "
                                 alt="user"
                             />
                             <div className="text-start me-5">
-                                <h5 className="mb-0 text-muted">{user?.name || "Guest"}</h5>
-                                <p className="mb-0 text-muted">{user?.email || "No Email"}</p>
+                                <h5 className="mb-0 text-muted">
+                                    {loading ? "Loading..." : currentUser?.username || "Guest"}
+                                </h5>
+                                <p className="mb-0 text-muted">
+                                    {loading ? "Loading..." : currentUser?.email || "No Email"}
+                                </p>
+
                             </div>
 
                             <ul className="navbar-nav bg-light ms-5">

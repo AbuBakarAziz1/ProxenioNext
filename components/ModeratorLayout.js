@@ -18,8 +18,18 @@ export default function DashboardLayout({ children }) {
   
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "GET" });
-    router.push("/login"); // Redirect to login after logout
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+  
+      if (!res.ok) throw new Error("Logout failed");
+  
+      // Redirect user to login page after logout
+      router.push("/login");
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
 

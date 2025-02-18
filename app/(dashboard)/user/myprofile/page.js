@@ -1,15 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useUser } from "@/app/context/UserContext";
 
 export default function Myprofile() {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { currentUser } = useUser();
+
 
     useEffect(() => {
         async function fetchProfile() {
             try {
-                const response = await fetch("/api/getProfile", {
+                const response = await fetch(`/api/getProfile?id=${currentUser.id}`, {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                 });

@@ -1,13 +1,15 @@
 "use client";
-"use client";
 import { useState, useEffect, useMemo } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
+import { useUser } from "@/app/context/UserContext";
 
 const ProfilePage = () => {
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const { currentUser } = useUser();
 
   const [filters, setFilters] = useState({
     gender: "",
@@ -67,7 +69,7 @@ const ProfilePage = () => {
 
   const handleMatch = async (receiverId) => {
     try {
-      const senderId = "67b2139e66a17f0c7869a85b"; // Replace with logged-in user's ID
+      const senderId = currentUser.id; // Replace with logged-in user's ID
       const response = await fetch("/api/matches", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

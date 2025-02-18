@@ -1,6 +1,9 @@
 "use client";
+import { useUser } from "@/app/context/UserContext";
 
 export default function UserDashboard() {
-    return <h1>Welcome, use!</h1>;
+  const { currentUser, loading } = useUser();
+
+    return <h1>Welcome, {currentUser.username}!</h1>;
   }
   

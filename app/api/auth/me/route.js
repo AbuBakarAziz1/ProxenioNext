@@ -7,13 +7,12 @@ export async function GET() {
   try {
     await connectDB();
 
-    const cookieStore = await cookies(); // ✅ Await cookies()
+    const cookieStore = cookies(); // ✅ Await cookies properly
     const token = cookieStore.get("authToken")?.value;
-
     if (!token) return Response.json({ error: "Not authenticated" }, { status: 401 });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select("-password");
+    const user = await User.findById(decoded._id).select("-password");
 
     if (!user) return Response.json({ error: "User not found" }, { status: 404 });
 
