@@ -32,10 +32,9 @@ export default function Login() {
         throw new Error(data.error || "Login failed");
       }
 
-      // Store JWT token securely (prefer using cookies via API)
       document.cookie = `authToken=${data.token}; path=/; `;
       
-      setCurrentUser(data.user); // 🔹 Update user context immediately
+      setCurrentUser(data.user);
 
       if (data.role === "admin") {
         router.push("/admin");

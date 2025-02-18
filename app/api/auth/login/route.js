@@ -35,15 +35,6 @@ export async function POST(req) {
       { expiresIn: "1h" }
     );
 
-    // const cookieStore = cookies();
-    // cookieStore.set("authToken", token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV === "production",
-    //   sameSite: "lax",
-    //   path: "/",
-    //   maxAge: 3600,
-    // });
-
     return new Response(
       JSON.stringify({
         user: {
